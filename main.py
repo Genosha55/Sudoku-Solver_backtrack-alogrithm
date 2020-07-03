@@ -12,27 +12,22 @@ board = [
     [0,4,9,2,0,6,0,0,7]
 ]
 
-visited_pos = []
 
 def solve(bo):    
-    next_pos = find_empty(bo)
-    # print(next_pos)
-    if next_pos is None:
-        print("b")
-        return
-    else:
+    next_pos = find_empty(bo)   
+    if find_empty(bo) is None:
+        return True   # use a boolen to stop the recursion
+    else:    
         pos_x, pos_y = next_pos
-        for num in range(1,10):
-            if valid(bo, 3, next_pos):
-                print("a")
-                bo[pos_x][pos_y] = num
-                visited_pos.append((pos_x,pos_y))            
-                solve(bo)
-        # print(visited_pos[-1])
-        # x_last, y_last = visited_pos[-1]
-        # bo[x_last][y_last] = 0
-        # visited_pos.pop(-1)
-        return
+    for num in range(1,10):
+        if valid(bo, num, next_pos):
+            bo[pos_x][pos_y] = num
+            if solve(bo):
+                return True
+            else:    
+                bo[pos_x][pos_y] = 0
+    return False
+
 
 def valid(bo, num, pos):  # pos: (i,j) row, col
     # check row
@@ -51,7 +46,9 @@ def valid(bo, num, pos):  # pos: (i,j) row, col
     for i in range(index_x, index_x+3):
         for j in range(index_y, index_y+3):
             if num == bo[i][j] and pos != (i,j):
-                return False    
+                return False 
+    return True
+
 
 def print_board(bo):
     for i in range(len(bo)):
@@ -72,6 +69,6 @@ def find_empty(bo):
     for i in range(len(bo)):
         for j in range(len(bo[0])):
             if bo[i][j] == 0:
-                return (i, j)  # row, col
+                return i, j  # row, col
 
     return None
